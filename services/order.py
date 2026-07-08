@@ -1,3 +1,4 @@
+import datetime
 from typing import List, Dict, Optional
 from django.contrib.auth import get_user_model
 from django.db import transaction
@@ -9,16 +10,17 @@ User = get_user_model()
 
 @transaction.atomic
 def create_order(
-    tickets: List[Dict[str, int]],
-    username: str,
-    date: Optional[str] = None,
+        tickets: List[Dict[str, int]],
+        username: str,
+        date: Optional[str] = None,
 ) -> Order:
     user = User.objects.get(username=username)
-    order = Order.objects.create(user=user)
 
+    order_data = {"user": user}
     if date:
-        order.created_at = date
-        order.save()
+        order_data["created_at"] = datetime.datetime.strptime(date, "%Y-%m-%d %H:%M")
+
+    order = Order.objects.create(**order_data)
 
     for ticket_data in tickets:
         Ticket.objects.create(
@@ -31,7 +33,7 @@ def create_order(
     return order
 
 
-def get_orders(username: Optional[str] = None) -> QuerySet:
+def get_orders(username: Optional[str] = None) -> QuerySet[Order]:
     queryset = Order.objects.all()
     if username:
         queryset = queryset.filter(user__username=username)
