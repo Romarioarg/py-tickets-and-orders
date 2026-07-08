@@ -20,7 +20,7 @@ def get_movies(
     if title:
         queryset = queryset.filter(title__icontains=title)
 
-    return queryset.distinct()
+    return queryset.distinct().order_by("title")
 
 
 def get_movie_by_id(movie_id: int) -> Movie:
@@ -44,4 +44,4 @@ def create_movie(
     if actors_ids:
         movie.actors.set(actors_ids)
 
-    return movie
+
