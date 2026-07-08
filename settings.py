@@ -23,6 +23,12 @@ USE_I18N = True
 
 USE_TZ = False
 
+# Alterado: Adicionamos os apps do Django para controle de autenticação
 INSTALLED_APPS = [
+    "django.contrib.auth",
+    "django.contrib.contenttypes",
     "db",
 ]
+
+# Adicionado: Avisa ao Django para usar o nosso modelo User customizado
+AUTH_USER_MODEL = "db.User"
