@@ -18,7 +18,9 @@ def create_order(
 
     order_data = {"user": user}
     if date:
-        order_data["created_at"] = datetime.datetime.strptime(date, "%Y-%m-%d %H:%M")
+        order_data["created_at"] = datetime.datetime.strptime(
+            date, "%Y-%m-%d %H:%M"
+        )
 
     order = Order.objects.create(**order_data)
 

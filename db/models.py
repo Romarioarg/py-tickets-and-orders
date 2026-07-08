@@ -65,7 +65,9 @@ class MovieSession(models.Model):
 
 class Order(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
-    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="orders")
+    user = models.ForeignKey(
+        User, on_delete=models.CASCADE, related_name="orders"
+    )
 
     class Meta:
         ordering = ["-created_at"]
@@ -93,17 +95,27 @@ class Ticket(models.Model):
         ]
 
     def __str__(self) -> str:
-        return f"<Ticket: {self.movie_session.movie.title} {self.movie_session.show_time} (row: {self.row}, seat: {self.seat})>"
+        return (
+            f"<Ticket: {self.movie_session.movie.title} "
+            f"{self.movie_session.show_time} "
+            f"(row: {self.row}, seat: {self.seat})>"
+        )
 
     def clean(self) -> None:
         hall = self.movie_session.cinema_hall
         if not (1 <= self.row <= hall.rows):
             raise ValidationError({
-                "row": [f"row number must be in available range: (1, rows): (1, {hall.rows})"]
+                "row": [
+                    f"row number must be in available range: "
+                    f"(1, rows): (1, {hall.rows})"
+                ]
             })
         if not (1 <= self.seat <= hall.seats_in_row):
             raise ValidationError({
-                "seat": [f"seat number must be in available range: (1, seats_in_row): (1, {hall.seats_in_row})"]
+                "seat": [
+                    f"seat number must be in available range: "
+                    f"(1, seats_in_row): (1, {hall.seats_in_row})"
+                ]
             })
 
     def save(self, *args, **kwargs) -> None:
