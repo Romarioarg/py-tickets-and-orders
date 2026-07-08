@@ -46,4 +46,4 @@ def update_user(
         user.last_name = last_name
 
     user.save()
-
+    return user
